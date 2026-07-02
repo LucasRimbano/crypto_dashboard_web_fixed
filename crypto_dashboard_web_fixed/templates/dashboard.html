@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block title %}Dashboard generado · Crypto Dashboard{% endblock %}
+
+{% block content %}
+<section class="dashboard-page section-panel">
+    <div class="container py-5">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4" data-animate="animate__fadeInDown">
+        <div>
+            <span class="badge text-bg-success mb-2">Archivo procesado</span>
+            <h1 class="fw-bold mb-1">Dashboard de operaciones</h1>
+            <p class="text-secondary mb-0">Archivo: {{ filename }}</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{{ url_for('descargar_reporte') }}" class="btn btn-success">Descargar Excel</a>
+            <a href="{{ url_for('index') }}" class="btn btn-outline-light">Subir otro archivo</a>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-4 metrics-section">
+        <div class="col-6 col-lg-3" data-animate="animate__fadeInUp"><div class="metric-card"><span>Total invertido</span><strong>USD {{ metricas.total_invertido }}</strong></div></div>
+        <div class="col-6 col-lg-3" data-animate="animate__fadeInUp"><div class="metric-card"><span>Total vendido</span><strong>USD {{ metricas.total_vendido }}</strong></div></div>
+        <div class="col-6 col-lg-3" data-animate="animate__fadeInUp"><div class="metric-card"><span>PNL total</span><strong>USD {{ metricas.pnl_total }}</strong></div></div>
+        <div class="col-6 col-lg-3" data-animate="animate__fadeInUp"><div class="metric-card"><span>ROI total</span><strong>{{ metricas.roi_total }}%</strong></div></div>
+        <div class="col-6 col-lg-3" data-animate="animate__fadeInUp"><div class="metric-card"><span>Abiertas</span><strong>{{ metricas.operaciones_abiertas }}</strong></div></div>
+        <div class="col-6 col-lg-3" data-animate="animate__fadeInUp"><div class="metric-card"><span>Cerradas</span><strong>{{ metricas.operaciones_cerradas }}</strong></div></div>
+        <div class="col-6 col-lg-3" data-animate="animate__fadeInUp"><div class="metric-card"><span>Monedas</span><strong>{{ metricas.monedas }}</strong></div></div>
+    </div>
+
+    <section class="performance-summary-section mb-4" data-animate="animate__fadeInUp">
+        <div class="summary-action">
+            <div>
+                <span class="section-kicker">Resumen automatico</span>
+                <h2 class="h4 fw-bold mb-1">Lectura rapida del rendimiento</h2>
+                <p class="text-secondary mb-0">Genera un resumen con mejor trade, peor perdida realizada, mejor moneda y datos clave.</p>
+            </div>
+            <button class="btn btn-primary" type="button" id="generatePerformanceSummary">Generar resumen</button>
+        </div>
+        <div class="performance-summary-panel" id="performanceSummaryPanel" hidden></div>
+    </section>
+
+    <div class="row g-4 charts-section">
+        {% if graficos.torta_inversion %}<div class="col-lg-6" data-animate="animate__fadeInLeft"><div class="chart-card" data-hover-animate="animate__pulse">{{ graficos.torta_inversion|safe }}</div></div>{% endif %}
+        {% if graficos.barras_pnl %}<div class="col-lg-6" data-animate="animate__fadeInRight"><div class="chart-card" data-hover-animate="animate__pulse">{{ graficos.barras_pnl|safe }}</div></div>{% endif %}
+        {% if graficos.barras_roi %}<div class="col-lg-6" data-animate="animate__fadeInLeft"><div class="chart-card" data-hover-animate="animate__pulse">{{ graficos.barras_roi|safe }}</div></div>{% endif %}
+        {% if graficos.estado_operaciones %}<div class="col-lg-6" data-animate="animate__fadeInRight"><div class="chart-card" data-hover-animate="animate__pulse">{{ graficos.estado_operaciones|safe }}</div></div>{% endif %}
+        {% if graficos.linea_pnl %}<div class="col-12" data-animate="animate__fadeInUp"><div class="chart-card" data-hover-animate="animate__pulse">{{ graficos.linea_pnl|safe }}</div></div>{% endif %}
+    </div>
+
+    <section class="coin-detail-section mt-5" data-animate="animate__fadeInUp">
+        <div class="detail-header">
+            <div>
+                <span class="section-kicker">Analisis ampliado</span>
+                <h2 class="h4 fw-bold mb-1">Detalle por moneda</h2>
+                <p class="text-secondary mb-0">Toca una barra, una porcion del grafico o una fila del resumen para ver operaciones y rendimiento.</p>
+            </div>
+            <div class="coin-selector" role="group" aria-label="Seleccionar moneda">
+                {% for fila in resumen %}
+                    <button class="coin-pill" type="button" data-coin-select="{{ fila['Moneda'] }}">{{ fila['Moneda'] }}</button>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="coin-detail-panel" id="coinDetailPanel" aria-live="polite">
+            <div class="detail-empty">
+                <strong>Selecciona una moneda</strong>
+                <span>Tambien podes hacer clic directamente sobre las barras de PNL o ROI.</span>
+            </div>
+        </div>
+    </section>
+
+    <div class="card table-card mt-5" data-animate="animate__fadeInUp">
+        <div class="card-body">
+            <h2 class="h4 fw-bold mb-3">Resumen por moneda</h2>
+            <div class="table-responsive">
+                <table class="table table-dark table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Moneda</th><th>Invertido</th><th>Vendido</th><th>Abierto</th><th>PNL</th><th>ROI %</th><th>Abiertas</th><th>Cerradas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for fila in resumen %}
+                        <tr class="coin-summary-row" data-coin-row="{{ fila['Moneda'] }}">
+                            <td class="fw-bold">{{ fila['Moneda'] }}</td>
+                            <td>{{ fila['Dólares invertidos'] }}</td>
+                            <td>{{ fila['Dólares vendidos'] }}</td>
+                            <td>{{ fila['Dólares abiertos'] }}</td>
+                            <td>{{ fila['PNL cerrado total'] }}</td>
+                            <td>{{ fila['ROI %'] }}</td>
+                            <td>{{ fila['Operaciones abiertas'] }}</td>
+                            <td>{{ fila['Operaciones cerradas'] }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    window.cryptoCoinDetails = {{ detalle_monedas|tojson }};
+</script>
+<script src="{{ url_for('static', filename='js/dashboard-detail.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Subir archivo · Crypto Dashboard{% endblock %}
+
+{% block content %}
+<section class="hero-section section-panel section-hero">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-7" data-animate="animate__fadeInLeft">
+                <span class="badge rounded-pill text-bg-primary mb-3">Análisis de operaciones crypto</span>
+                <h1 class="display-5 fw-bold mb-3">Convertí tus operaciones en un dashboard profesional</h1>
+                <p class="lead text-secondary mb-4">
+                    Subí un archivo CSV o Excel con tus compras y ventas. La aplicación calcula PNL, ROI,
+                    operaciones abiertas, operaciones cerradas y genera gráficos interactivos automáticamente.
+                </p>
+                <div class="d-flex flex-wrap gap-2">
+                    <span class="chip">PNL por moneda</span>
+                    <span class="chip">Gráficos en torta</span>
+                    <span class="chip">Barras de ROI</span>
+                    <span class="chip">Reporte Excel</span>
+                </div>
+            </div>
+
+            <div class="col-lg-5" data-animate="animate__fadeInRight">
+                <div class="card upload-card shadow-lg" data-hover-animate="animate__pulse">
+                    <div class="card-body p-4">
+                        <h2 class="h4 fw-bold mb-3">Subir archivo</h2>
+                        <p class="text-secondary small d-none">
+                            Para Excel, usá hojas llamadas <strong>Compras</strong> y <strong>Ventas</strong>.
+                            Si subís CSV, se toma como hoja de compras.
+                        </p>
+
+                        <p class="text-secondary small">
+                            Podes subir una plantilla manual con tus compras y ventas, o cargar un export directo
+                            de Binance Spot Trade History. La app detecta el formato y lo convierte automaticamente.
+                        </p>
+                        <div class="supported-formats mb-4">
+                            <div>
+                                <span>Formato manual</span>
+                                <strong>Excel con hojas Compras y Ventas</strong>
+                            </div>
+                            <div>
+                                <span>Binance compatible</span>
+                                <strong>CSV, export Spot o Excel con hoja Datos limpios</strong>
+                            </div>
+                        </div>
+
+                        <form method="post" enctype="multipart/form-data">
+                            <div class="mb-3">
+                                <label for="archivo" class="form-label">Archivo CSV o Excel</label>
+                                <input class="form-control form-control-lg" type="file" id="archivo" name="archivo" accept=".csv,.xlsx,.xls" required>
+                            </div>
+                            <button class="btn btn-primary btn-lg w-100" type="submit">Generar dashboard</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="process-section section-panel">
+    <div class="container">
+        <div class="section-heading" data-animate="animate__fadeInUp">
+            <span class="section-kicker">Proceso</span>
+            <h2>De archivo bruto a reporte visual en minutos.</h2>
+        </div>
+        <div class="row g-4">
+        <div class="col-md-4" data-animate="animate__fadeInUp">
+            <div class="info-card h-100">
+                <h3>1. Cargás el archivo</h3>
+                <p>La web recibe un CSV o Excel exportado desde tu sistema de operaciones.</p>
+            </div>
+        </div>
+        <div class="col-md-4" data-animate="animate__fadeInUp">
+            <div class="info-card h-100">
+                <h3>2. Calcula métricas</h3>
+                <p>Se procesa la información con pandas para obtener PNL, ROI y estado de operaciones.</p>
+            </div>
+        </div>
+        <div class="col-md-4" data-animate="animate__fadeInUp">
+            <div class="info-card h-100">
+                <h3>3. Genera gráficos</h3>
+                <p>Se muestran gráficos interactivos y un Excel descargable con el resumen.</p>
+            </div>
+        </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
