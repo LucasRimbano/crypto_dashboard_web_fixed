@@ -1,4 +1,5 @@
 import os
+import tempfile
 from pathlib import Path
 
 import pandas as pd
@@ -7,7 +8,10 @@ from flask import Flask, render_template, request, redirect, url_for, flash, sen
 from werkzeug.utils import secure_filename
 
 BASE_DIR = Path(__file__).resolve().parent
-UPLOAD_FOLDER = BASE_DIR / "uploads"
+# Vercel Functions solo permite escrituras temporales en /tmp. En desarrollo
+# conservamos la carpeta uploads para que el comportamiento local no cambie.
+UPLOAD_FOLDER = Path(tempfile.gettempdir()) if os.environ.get("VERCEL") else BASE_DIR / "uploads"
+UPLOAD_FOLDER.mkdir(parents=True, exist_ok=True)
 ALLOWED_EXTENSIONS = {"xlsx", "xls", "csv"}
 QUOTE_ASSETS = [
     "USDT",
@@ -27,7 +31,7 @@ QUOTE_ASSETS = [
 
 app = Flask(__name__)
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
-app.config["SECRET_KEY"] = "cambiar-esta-clave-en-produccion"
+app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "clave-local-solo-desarrollo")
 
 COLUMNAS_COMPRAS = [
     "ID",
