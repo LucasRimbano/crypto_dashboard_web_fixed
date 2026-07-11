@@ -8,7 +8,7 @@ La app permite subir un archivo con operaciones, procesar los datos automáticam
 
 - Carga de archivos `.xlsx`, `.xls` o `.csv`.
 - Lectura de hojas `Compras` y `Ventas` desde Excel.
-- DetecciÃ³n automÃ¡tica de exports de Binance Spot Trade History.
+- Deteccion automatica de exports de Binance Spot Trade History.
 - Cálculo de:
   - Total invertido.
   - Total vendido.
