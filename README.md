@@ -8,21 +8,11 @@ Proyecto creado con **Python, Flask, pandas, Plotly, Bootstrap, HTML, CSS y Java
 
 ---
 
-# Dashboard Web de Operaciones Cripto
-
-Dashboard web para analizar operaciones de criptomonedas desde archivos CSV o Excel.
-
-La aplicación procesa compras y ventas, calcula PNL, ROI, operaciones abiertas, operaciones cerradas y genera gráficos interactivos con detalle por moneda.
-
-Proyecto creado con **Python, Flask, pandas, Plotly, Bootstrap, HTML, CSS y JavaScript**.
-
----
-
 ## Vista previa
 
 <p align="center">
   <img
-    src="static/img/crypto-dashboard-preview.png"
+    src="crypto_dashboard_web_fixed/static/img/crypto-dashboard-preview.png"
     alt="Vista principal del Dashboard Web de Operaciones Cripto"
     width="100%"
   >
